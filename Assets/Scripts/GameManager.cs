@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        PlayerPrefs.DeleteAll();
+
         cta.SetActive(true);
         atributos.SetActive(false);
         refrescancia.SetActive(false);

@@ -7,7 +7,13 @@ public class ResultScreen : MonoBehaviour
     [SerializeField] private GameObject cta;
 
     public Text resultText;
+    public Text resultsText;
+
     public Button returnCta;
+
+    public HashSet<string> results;
+
+    public string resultTotal;
 
     void Start()
     {
@@ -24,6 +30,12 @@ public class ResultScreen : MonoBehaviour
         string result2 = DetermineResult2(result1, selectedRefreshment);
 
         resultText.text = $"Resultado 1: {result1}\nResultado 2: {result2}";
+
+        resultTotal =  JoinResults(result1, result2);
+        AddResultsToHash(resultTotal);
+
+        DisplayResults();
+
     }
 
     string DetermineResult1(string attributes)
@@ -46,32 +58,32 @@ public class ResultScreen : MonoBehaviour
                             attributeSet.Contains("Remover manchas");
 
         if (hasGeralSW && hasAnticaries && hasAntitartaro && hasWhitening)
-            return "Cuidado Total + Whitening";
+            return "Cuidado Total,Whitening";
         if (hasGeralSW && hasAnticaries && hasWhitening)
-            return "Anticáries + Whitening";
+            return "Anticáries,Whitening";
         if (hasGeralSW && hasAnticaries && hasAntitartaro)
             return "Cuidado Total";
         if (hasGeralSW && hasAnticaries)
             return "Anticáries";
         if (hasGeralSW && hasAntitartaro && hasWhitening)
-            return "Antitártaro + Whitening";
+            return "Antitártaro,Whitening";
         if (hasGeralSW && hasAntitartaro)
             return "Antitártaro";
         if (hasGeralSW && hasWhitening)
-            return "Cool Mint / Melancia + Whitening";
+            return "Cool Mint,Melancia,Whitening";
         if (hasGeralSW)
-            return "Cool Mint / Melancia";
+            return "Cool Mint,Melancia";
 
         if (hasAnticaries && hasAntitartaro && hasWhitening)
-            return "Cuidado Total + Whitening";
+            return "Cuidado Total,Whitening";
         if (hasAnticaries && hasWhitening)
-            return "Anticáries + Whitening";
+            return "Anticáries,Whitening";
         if (hasAnticaries && hasAntitartaro)
             return "Cuidado Total";
         if (hasAnticaries)
             return "Anticáries";
         if (hasAntitartaro && hasWhitening)
-            return "Antitártaro + Whitening";
+            return "Antitártaro,Whitening";
         if (hasAntitartaro)
             return "Antitártaro";
         if (hasWhitening)
@@ -82,12 +94,12 @@ public class ResultScreen : MonoBehaviour
 
     string DetermineResult2(string result1, string refreshment)
     {
-        if (result1 == "Cool Mint / Melancia")
+        if (result1 == "Cool Mint,Melancia")
         {
             if (refreshment == "Refrescância intensa")
                 return "Cool Mint";
             if (refreshment == "Refrescância suave")
-                return "Cool Mint s/ álcool, Melancia & Hortelã";
+                return "Cool Mint s/ álcool,Melancia & Hortelã";
         }
         if (result1 == "Antitártaro")
         {
@@ -121,4 +133,25 @@ public class ResultScreen : MonoBehaviour
         PlayerPrefs.Save();
         Debug.Log("Todos os PlayerPrefs foram resetados.");
     }
+
+    public string JoinResults(string result1,string result2)
+    {
+        return result1 + "," + result2;
+    }
+
+    public void AddResultsToHash(string resultTotal)
+    {
+        results = new HashSet<string>(resultTotal.Split(','));
+    }
+
+    void DisplayResults()
+    {
+        // Exibe os resultados no Text (opcional)
+        resultsText.text = "Resultados:\n";
+        foreach (var result in results)
+        {
+            resultsText.text += result + " - ";
+        }
+    }
+
 }
