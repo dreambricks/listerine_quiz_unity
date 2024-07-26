@@ -1,19 +1,39 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class AttributeSelection : MonoBehaviour
 {
+    [SerializeField] private GameObject refrescancia;
+    [SerializeField] private GameObject resposta;
+
     public List<Toggle> attributeToggles;
     public Button nextButton;
+    public Text warningText;
 
     private List<string> selectedAttributes = new List<string>();
 
+    private List<string> anticariesAttributes = new List<string> { "Proteção anticáries", "Fortalecer os dentes" };
+    private List<string> whiteningAttributes = new List<string> { "Clarear os dentes", "Remover manchas" };
+
     void Start()
     {
-        Debug.Log("Hello, Unity Console!");
         nextButton.onClick.AddListener(OnNextButtonClicked);
+    }
+
+
+    private void OnEnable()
+    {
+        if (warningText != null)
+        {
+            warningText.gameObject.SetActive(false);
+        }
+
+        foreach (var toggle in attributeToggles)
+        {
+            toggle.isOn = false;
+        }
     }
 
     void OnNextButtonClicked()
@@ -26,24 +46,47 @@ public class AttributeSelection : MonoBehaviour
                 selectedAttributes.Add(toggle.GetComponentInChildren<Text>().text);
             }
         }
-  
-        // Armazena os atributos selecionados para uso na próxima tela
-        PlayerPrefs.SetString("SelectedAttributes", string.Join(",", selectedAttributes));
-        Debug.Log(PlayerPrefs.GetString("SelectedAttributes"));
 
-        // Verifique se deve pular a tela 3
+        if (selectedAttributes.Count == 0)
+        {
+            if (warningText != null)
+            {
+                warningText.gameObject.SetActive(true);
+                warningText.text = "Por favor, selecione pelo menos um atributo.";
+                StartCoroutine(HideWarningTextAfterDelay(3f));
+            }
+            return;
+        }
+
+
+        PlayerPrefs.SetString("SelectedAttributes", string.Join(",", selectedAttributes));
+
+        
         if (ShouldSkipRefreshScreen(selectedAttributes))
         {
-            Debug.Log("Tela4");
+            resposta.SetActive(true);
+            gameObject.SetActive(false);
         }
         else
         {
-            Debug.Log("Tela3");
+            refrescancia.SetActive(true);
+            gameObject.SetActive(false);
         }
     }
 
     bool ShouldSkipRefreshScreen(List<string> attributes)
     {
-        return attributes.Contains("Proteção anticáries") || attributes.Contains("Clarear os dentes");
+        bool isAnticariesOnly = attributes.Count > 0 && attributes.TrueForAll(attr => anticariesAttributes.Contains(attr));
+        bool isWhiteningOnly = attributes.Count > 0 && attributes.TrueForAll(attr => whiteningAttributes.Contains(attr));
+        return isAnticariesOnly || isWhiteningOnly;
+    }
+
+    private IEnumerator HideWarningTextAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (warningText != null)
+        {
+            warningText.gameObject.SetActive(false);
+        }
     }
 }

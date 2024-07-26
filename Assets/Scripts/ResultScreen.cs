@@ -4,10 +4,19 @@ using System.Collections.Generic;
 
 public class ResultScreen : MonoBehaviour
 {
+    [SerializeField] private GameObject cta;
+
     public Text resultText;
+    public Button returnCta;
 
     void Start()
     {
+        returnCta.onClick.AddListener(OnNextButtonClicked);
+    }
+
+    private void OnEnable()
+    {
+
         string selectedAttributes = PlayerPrefs.GetString("SelectedAttributes");
         string selectedRefreshment = PlayerPrefs.GetString("SelectedRefreshment");
 
@@ -96,5 +105,20 @@ public class ResultScreen : MonoBehaviour
         }
 
         return result1;
+    }
+
+    void OnNextButtonClicked()
+    {
+        ResetAllPlayerPrefs();
+
+        cta.SetActive(true);
+        gameObject.SetActive(false);
+    }
+
+    public void ResetAllPlayerPrefs()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+        Debug.Log("Todos os PlayerPrefs foram resetados.");
     }
 }
