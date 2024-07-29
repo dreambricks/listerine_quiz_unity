@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.Windows;
 
 public class ResultScreen : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class ResultScreen : MonoBehaviour
 
     public string resultTotal;
 
+    public float timeLeft;
+    public float totalTime;
+
     void Start()
     {
         returnCta.onClick.AddListener(OnNextButtonClicked);
@@ -22,6 +26,9 @@ public class ResultScreen : MonoBehaviour
 
     private void OnEnable()
     {
+
+        timeLeft = totalTime;
+
 
         string selectedAttributes = PlayerPrefs.GetString("SelectedAttributes");
         string selectedRefreshment = PlayerPrefs.GetString("SelectedRefreshment");
@@ -36,6 +43,11 @@ public class ResultScreen : MonoBehaviour
 
         DisplayResults();
 
+    }
+
+    private void Update()
+    {
+        Chronometer();
     }
 
     string DetermineResult1(string attributes)
@@ -121,6 +133,7 @@ public class ResultScreen : MonoBehaviour
 
     void OnNextButtonClicked()
     {
+        SaveLog();
         ResetAllPlayerPrefs();
 
         cta.SetActive(true);
@@ -152,6 +165,33 @@ public class ResultScreen : MonoBehaviour
         {
             resultsText.text += result + " - ";
         }
+        resultsText.text = resultsText.text.Remove(resultsText.text.Length - 3);
+    }
+
+    private void Chronometer()
+    {
+        timeLeft -= Time.deltaTime;
+
+        if (timeLeft <= 0.0f)
+        {
+            SaveLog();
+            ResetAllPlayerPrefs();
+            cta.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+
+        }
+    }
+
+    void SaveLog()
+    {
+        DataLog dataLog = LogUtil.GetDatalogFromJson();
+        dataLog.status = StatusEnum.ACAO_CONCLUIDA.ToString();
+        foreach (var result in results)
+        {
+           dataLog.additional += result + "|";
+        }
+        dataLog.additional = dataLog.additional.Remove(dataLog.additional.Length - 1);
+        LogUtil.SaveLog(dataLog);
     }
 
 }

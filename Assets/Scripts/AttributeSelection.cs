@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class AttributeSelection : MonoBehaviour
 {
     [SerializeField] private GameObject refrescancia;
     [SerializeField] private GameObject resposta;
+    [SerializeField] private GameObject cta;
 
     public List<Toggle> attributeToggles;
     public Button nextButton;
@@ -17,14 +19,24 @@ public class AttributeSelection : MonoBehaviour
     private List<string> anticariesAttributes = new List<string> { "Proteção anticáries", "Fortalecer os dentes" };
     private List<string> whiteningAttributes = new List<string> { "Clarear os dentes", "Remover manchas" };
 
+    public float timeLeft;
+    public float totalTime;
+
     void Start()
     {
         nextButton.onClick.AddListener(OnNextButtonClicked);
     }
 
+    private void Update()
+    {
+        Chronometer();
+    }
+
 
     private void OnEnable()
     {
+        timeLeft = totalTime;
+
         if (warningText != null)
         {
             warningText.gameObject.SetActive(false);
@@ -88,5 +100,26 @@ public class AttributeSelection : MonoBehaviour
         {
             warningText.gameObject.SetActive(false);
         }
+    }
+
+    private void Chronometer()
+    {
+        timeLeft -= Time.deltaTime;
+
+        if (timeLeft <= 0.0f)
+        {
+            SaveLog();
+            cta.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+
+        }
+    }
+
+    void SaveLog()
+    {
+        DataLog dataLog = LogUtil.GetDatalogFromJson();
+        dataLog.status = StatusEnum.PAROU_EM_ATRIBUTOS.ToString();
+        dataLog.additional = "vazio";
+        LogUtil.SaveLog(dataLog);
     }
 }

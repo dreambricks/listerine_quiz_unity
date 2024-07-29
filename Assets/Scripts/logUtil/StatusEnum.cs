@@ -1,0 +1,6 @@
+public enum StatusEnum
+{
+    PAROU_EM_ATRIBUTOS,
+    PAROU_EM_REFRESCANCIA,
+    ACAO_CONCLUIDA
+}
