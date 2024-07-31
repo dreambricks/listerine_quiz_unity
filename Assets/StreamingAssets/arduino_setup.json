@@ -1,4 +1,4 @@
 {
-	"serialPort": "COM7",
-    "baudrate": 115200
+    "serialPort": "COM7",
+    "baudrate": 9600
 }

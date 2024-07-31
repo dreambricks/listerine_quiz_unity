@@ -1,14 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEngine.Windows;
+using UnityEditor.Experimental.GraphView;
 
 public class ResultScreen : MonoBehaviour
 {
     [SerializeField] private GameObject cta;
 
-    public Text resultText;
-    public Text resultsText;
+    [SerializeField] private GameObject panel1item;
+    [SerializeField] private GameObject panel2items;
+    [SerializeField] private GameObject panel3items;
+
+    public Dictionary<string, string> imageDictionary;
+
+    public Dictionary<string, string> colorDictionary;
 
     public Button returnCta;
 
@@ -19,13 +24,48 @@ public class ResultScreen : MonoBehaviour
     public float timeLeft;
     public float totalTime;
 
-    void Start()
+    private ColorParameters colorParameter;
+
+
+    void Awake()
     {
         returnCta.onClick.AddListener(OnNextButtonClicked);
+        colorParameter = SaveManager.LoadFromJsonFile<ColorParameters>("ColorParameters.json");
+
     }
 
     private void OnEnable()
     {
+
+        imageDictionary = new Dictionary<string, string>
+        {
+            { "Whitening", "whitening" },
+            { "Cuidado Total", "cuidado_total_intense" },
+            { "Cuidado Total s/ álcool", "cuidado_total_suave" },
+            { "Anticáries", "anticaries_suave" },
+            { "Antitártaro s/ álcool", "antitartaro_suave" },
+            { "Antitártaro", "antitartaro_intense" },
+            { "Melancia & Hortelã", "melancia" },
+            { "Melancia", "melancia" },
+            { "Cool Mint s/ álcool", "cool_mint_suave" },
+            { "Cool Mint", "cool_mint_intense" }
+        };
+
+
+        colorDictionary = new Dictionary<string, string>
+        {
+            { "Whitening", colorParameter.Whitening },
+            { "Cuidado Total", colorParameter.CuidadoTotal },
+            { "Cuidado Total s/ álcool", colorParameter.CuidadoTotalSemAlcool },
+            { "Anticáries", colorParameter.Anticaries },
+            { "Antitártaro s/ álcool", colorParameter.AntitartaroSemAlcool },
+            { "Antitártaro", colorParameter.Antitartaro },
+            { "Melancia & Hortelã", colorParameter.Melancia },
+            { "Melancia", colorParameter.Melancia },
+            { "Cool Mint s/ álcool", colorParameter.CoolMintSemAlcool },
+            { "Cool Mint", colorParameter.CoolMint }
+        };
+
 
         timeLeft = totalTime;
 
@@ -36,12 +76,16 @@ public class ResultScreen : MonoBehaviour
         string result1 = DetermineResult1(selectedAttributes);
         string result2 = DetermineResult2(result1, selectedRefreshment);
 
-        resultText.text = $"Resultado 1: {result1}\nResultado 2: {result2}";
+        //resultText.text = $"Resultado 1: {result1}\nResultado 2: {result2}";
 
         resultTotal =  JoinResults(result1, result2);
         AddResultsToHash(resultTotal);
 
-        DisplayResults();
+        //DisplayResults();
+
+        DisplayPanel();
+
+        Debug.Log("RESULTADOS: " + PlayerPrefs.GetString("Results"));
 
     }
 
@@ -111,7 +155,7 @@ public class ResultScreen : MonoBehaviour
             if (refreshment == "Refrescância intensa")
                 return "Cool Mint";
             if (refreshment == "Refrescância suave")
-                return "Cool Mint s/ álcool,Melancia & Hortelã";
+                return "Cool Mint s/ álcool,Melancia";
         }
         if (result1 == "Antitártaro")
         {
@@ -157,16 +201,16 @@ public class ResultScreen : MonoBehaviour
         results = new HashSet<string>(resultTotal.Split(','));
     }
 
-    void DisplayResults()
-    {
-        // Exibe os resultados no Text (opcional)
-        resultsText.text = "Resultados:\n";
-        foreach (var result in results)
-        {
-            resultsText.text += result + " - ";
-        }
-        resultsText.text = resultsText.text.Remove(resultsText.text.Length - 3);
-    }
+    //void DisplayResults()
+    //{
+        
+    //    resultsText.text = "Resultados:\n";
+    //    foreach (var result in results)
+    //    {
+    //        resultsText.text += result + " - ";
+    //    }
+    //    resultsText.text = resultsText.text.Remove(resultsText.text.Length - 3);
+    //}
 
     private void Chronometer()
     {
@@ -192,6 +236,43 @@ public class ResultScreen : MonoBehaviour
         }
         dataLog.additional = dataLog.additional.Remove(dataLog.additional.Length - 1);
         LogUtil.SaveLog(dataLog);
+    }
+
+    void DisplayPanel()
+    {
+        panel1item.gameObject.SetActive(false);
+        panel2items.gameObject.SetActive(false);
+        panel3items.gameObject.SetActive(false);
+
+        PlayerPrefs.SetString("Results", string.Join(",", results));
+
+        switch (results.Count)
+        {
+            case 1:
+                panel1item.gameObject.SetActive(true);
+                panel2items.gameObject.SetActive(false);
+                panel3items.gameObject.SetActive(false);
+                break;
+            case 2:
+                panel1item.gameObject.SetActive(false);
+                panel2items.gameObject.SetActive(true);
+                panel3items.gameObject.SetActive(false);
+                break;
+          
+            default:
+                panel1item.gameObject.SetActive(false);
+                panel2items.gameObject.SetActive(false);
+                panel3items.gameObject.SetActive(true);
+                break;
+        }
+
+    }
+
+    private void OnDisable()
+    {
+        panel1item.gameObject.SetActive(false);
+        panel2items.gameObject.SetActive(false);
+        panel3items.gameObject.SetActive(false);
     }
 
 }
