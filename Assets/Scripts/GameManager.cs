@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject refrescancia;
     [SerializeField] private GameObject resposta;
     [SerializeField] private GameObject legal;
+    [SerializeField] private GameObject qr;
 
     void Start()
     {
@@ -19,6 +20,7 @@ public class GameManager : MonoBehaviour
         refrescancia.SetActive(false);
         resposta.SetActive(false);
         legal.SetActive(false);
+        qr.SetActive(false);
     }
 
 }

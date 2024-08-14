@@ -2,8 +2,6 @@ using UnityEngine;
 using System.IO.Ports;
 using System.Threading;
 using System;
-using System.IO;
-using UnityEngine.Windows;
 
 public class ArduinoCommunication : MonoBehaviour
 {

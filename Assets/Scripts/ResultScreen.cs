@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 
 public class ResultScreen : MonoBehaviour
 {
-    [SerializeField] private GameObject cta;
+    [SerializeField] private GameObject qr;
 
     [SerializeField] private GameObject panel1item;
     [SerializeField] private GameObject panel2items;
@@ -76,12 +75,8 @@ public class ResultScreen : MonoBehaviour
         string result1 = DetermineResult1(selectedAttributes);
         string result2 = DetermineResult2(result1, selectedRefreshment);
 
-        //resultText.text = $"Resultado 1: {result1}\nResultado 2: {result2}";
-
         resultTotal =  JoinResults(result1, result2);
         AddResultsToHash(resultTotal);
-
-        //DisplayResults();
 
         DisplayPanel();
 
@@ -179,8 +174,7 @@ public class ResultScreen : MonoBehaviour
     {
         SaveLog();
         ResetAllPlayerPrefs();
-
-        cta.SetActive(true);
+        qr.SetActive(true);
         gameObject.SetActive(false);
     }
 
@@ -201,16 +195,7 @@ public class ResultScreen : MonoBehaviour
         results = new HashSet<string>(resultTotal.Split(','));
     }
 
-    //void DisplayResults()
-    //{
-        
-    //    resultsText.text = "Resultados:\n";
-    //    foreach (var result in results)
-    //    {
-    //        resultsText.text += result + " - ";
-    //    }
-    //    resultsText.text = resultsText.text.Remove(resultsText.text.Length - 3);
-    //}
+
 
     private void Chronometer()
     {
@@ -220,7 +205,7 @@ public class ResultScreen : MonoBehaviour
         {
             SaveLog();
             ResetAllPlayerPrefs();
-            cta.gameObject.SetActive(true);
+            qr.gameObject.SetActive(true);
             gameObject.SetActive(false);
 
         }

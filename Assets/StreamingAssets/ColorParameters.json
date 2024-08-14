@@ -1,12 +1,12 @@
 {
     "Whitening": "255,255,255",
     "CuidadoTotal": "190,25,255",
-    "CuidadoTotalSemAlcool": "255,145,235",
-    "Anticaries": "131,255,89",
-    "AntitartaroSemAlcool": "102,255,245",
-    "Antitartaro": "0,171,210",
-    "MelanciaEHortela": "229,159,164",
-    "Melancia": "255,156,175",
-    "CoolMintSemAlcool": "140,255,209",
-    "CoolMint": "59,255,176"
+    "CuidadoTotalSemAlcool": "255,70,150",
+    "Anticaries": "131,255,50",
+    "AntitartaroSemAlcool": "102,200,200",
+    "Antitartaro": "0,171,255",
+    "MelanciaEHortela": "229,60,90",
+    "Melancia": "255,60,90",
+    "CoolMintSemAlcool": "140,255,120",
+    "CoolMint": "70,255,90"
 }
