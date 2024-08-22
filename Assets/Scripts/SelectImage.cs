@@ -22,13 +22,8 @@ public class SelectImage : MonoBehaviour
 
         resultList = new List<string>(results.Split(','));
 
-        
-        if (resultList.Contains("whitening"))
-        {
-            
-            resultList.Remove("whitening");
-            resultList.Insert(0, "whitening");
-        }
+        MoveWhiteningToFrontResultList();
+
 
         foreach (string s in resultList)
         {
@@ -41,6 +36,17 @@ public class SelectImage : MonoBehaviour
 
         JoinImages();
         SendArduinomessage();
+    }
+
+    private void MoveWhiteningToFrontResultList()
+    {
+        string whiteningSprite = resultList.FirstOrDefault(s => s == "Whitening");
+
+        if (whiteningSprite != null)
+        {
+            resultList.Remove("Whitening");
+            resultList.Insert(0, "Whitening");
+        }
     }
 
     private void MoveWhiteningSpriteToFront()
@@ -99,7 +105,7 @@ public class SelectImage : MonoBehaviour
     {
         if (resultScreen.colorDictionary.ContainsKey(resultList[0]))
         {
-            arduinoCommunication.SendMessageToArduino(resultScreen.colorDictionary[resultList[0]]);
+            arduinoCommunication.SendMessageToArduino(resultScreen.colorDictionary[resultList[resultList.Count - 1]]);
             Debug.Log($"Key '{resultList[0]}' not found in colorDictionary.");
 
         }

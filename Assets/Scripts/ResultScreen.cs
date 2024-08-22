@@ -14,7 +14,7 @@ public class ResultScreen : MonoBehaviour
 
     public Dictionary<string, string> colorDictionary;
 
-    public Button returnCta;
+    public Button next;
 
     public HashSet<string> results;
 
@@ -28,7 +28,7 @@ public class ResultScreen : MonoBehaviour
 
     void Awake()
     {
-        returnCta.onClick.AddListener(OnNextButtonClicked);
+        next.onClick.AddListener(OnNextButtonClicked);
         colorParameter = SaveManager.LoadFromJsonFile<ColorParameters>("ColorParameters.json");
 
     }
@@ -172,8 +172,6 @@ public class ResultScreen : MonoBehaviour
 
     void OnNextButtonClicked()
     {
-        SaveLog();
-        ResetAllPlayerPrefs();
         qr.SetActive(true);
         gameObject.SetActive(false);
     }

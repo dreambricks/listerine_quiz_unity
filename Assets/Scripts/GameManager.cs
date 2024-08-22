@@ -8,8 +8,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject atributos;
     [SerializeField] private GameObject refrescancia;
     [SerializeField] private GameObject resposta;
-    [SerializeField] private GameObject legal;
     [SerializeField] private GameObject qr;
+
+    private void Awake()
+    {
+        Application.targetFrameRate = 30;
+    }
 
     void Start()
     {
@@ -19,7 +23,6 @@ public class GameManager : MonoBehaviour
         atributos.SetActive(false);
         refrescancia.SetActive(false);
         resposta.SetActive(false);
-        legal.SetActive(false);
         qr.SetActive(false);
     }
 

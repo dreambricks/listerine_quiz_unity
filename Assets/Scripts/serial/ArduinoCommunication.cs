@@ -101,7 +101,7 @@ public class ArduinoCommunication : MonoBehaviour
     {
         if (serialPort.IsOpen)
         {
-            serialPort.Write(message); 
+            serialPort.Write(message + "\n"); 
             Debug.Log("Sent to Arduino: " + message);
         }
         else
